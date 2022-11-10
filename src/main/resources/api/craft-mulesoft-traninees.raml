@@ -1,0 +1,74 @@
+#%RAML 1.0
+title: Craft-Mulesoft-Traninees
+version: 1.0.0
+types:
+  Note: !include noteData/NoteDataType.raml
+
+/api/notes:
+  get:
+    description: "Using this method user can retrieve all note Information"
+    displayName: Get all the notes
+    responses:
+      200:
+        body:
+          application/json:
+            type: Note[]
+            examples: !include noteData/NotesExample.raml
+  post:
+    description: "Using this method user can save note information"
+    displayName: Save note
+    body:
+      application/json:
+        type: Note
+        examples: !include noteData/NoteExample.raml
+    responses:
+      201:
+        body:
+          application/json:
+            example:
+              {
+                Message : "Successfully note added",
+                Code : 201
+              }
+
+  /{noteId}:
+    get:
+      description: "Using this method user can retrieve specific note Information"
+      displayName: Get specific note
+      responses:
+        200:
+          body:
+            application/json:
+              type: Note
+              examples: !include noteData/NoteExample.raml
+
+    put:
+      description: "Using this method user can update specific note Information"
+      displayName: Update specific note
+      body:
+        application/json:
+          type: Note
+          examples: !include noteData/NoteExample.raml
+      responses:
+        200:
+          body:
+            application/json:
+              example:
+                {
+                  Message : "Successfully note update",
+                  Code : 200
+                }
+    delete:
+      description: "Using this method user can delete specific note Information"
+      displayName: Delete specific note
+      responses:
+        200:
+          body:
+            application/json:
+              example:
+                {
+                  Message : "Successfully note delete",
+                  Code : 200
+                }
+      
+

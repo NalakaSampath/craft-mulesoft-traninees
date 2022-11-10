@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+    <validation:config name="Validation_Config" doc:name="Validation Config" doc:id="fa3ceb91-a85c-47a6-8b7c-a17b8860ef99" />
+    <flow name="craft-mulesoft-traninees-main">
+        <http:listener config-ref="craft-mulesoft-traninees-httpListenerConfig" path="/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="craft-mulesoft-traninees-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:BAD_REQUEST">
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Bad request"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">400</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Method not allowed"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">405</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not acceptable"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">406</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Unsupported media type"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">415</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not Implemented"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">501</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="put:\api\notes\(noteId):application\json:craft-mulesoft-traninees-config">
+        <set-variable value="#[attributes.uriParams.'noteId']" doc:name="Set noteId" doc:id="fc9b5308-81a7-4052-81a9-a8c01f472ea5" variableName="noteId" />
+		<db:update doc:name="Update" doc:id="088354bb-8cbe-492a-bf9c-906f1b2dc24d" config-ref="Database_Config">
+			<db:sql ><![CDATA[UPDATE `note-team` SET titel = :titel, content = :content , updateAt = :updateAt WHERE id = :noteId;]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{noteId:vars.noteId,titel:payload.titel, content:payload.content, updateAt:now() as DateTime as String {format: "yyyy-MM-dd HH:mm:ss"}}]]]></db:input-parameters>
+		</db:update>
+		<ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  Message: "Successfully note update",
+  Code: 200
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="get:\api\notes:craft-mulesoft-traninees-config">
+        <!-- <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+-&#45;&#45;
+[
+  {
+    id: 1001,
+    titel: "english",
+    content: "this is an example content",
+    createAt: "2022-11-08T00:00:00.090Z",
+    updateAt: "2022-11-08T01:00:00.090Z"
+  }, 
+  {
+    id: 1002,
+    titel: "english",
+    content: "this is an example content",
+    createAt: "2022-11-09T00:00:00.090Z",
+    updateAt: "2022-11-09T01:00:00.090Z"
+  }
+]]]></ee:set-payload>
+            </ee:message>
+        </ee:transform> -->
+        <db:select doc:id="64a72226-1263-4767-925c-0637a06ead0e" config-ref="Database_Config" doc:name="Select all notes">
+            <db:sql><![CDATA[select * from `note-team`]]></db:sql>
+        </db:select>
+        <ee:transform doc:name="convert to json" doc:id="7c9e0035-9a04-4d4b-a744-4de44b1f3e4d">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="get:\api\notes\(noteId):craft-mulesoft-traninees-config">
+        <set-variable value="#[attributes.uriParams.'noteId']" doc:name="Set noteId" doc:id="d3d6cf5b-3ecf-4571-b733-66e170ef1816" variableName="noteId" />
+        <!-- 		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core">
+            <ee:variables>
+                <ee:set-variable variableName="noteId">attributes.uriParams.'noteId'</ee:set-variable>
+            </ee:variables>
+        </ee:transform> -->
+        <db:select doc:name="Select specific note" doc:id="034484dd-d335-4f3f-98f0-6b2a038b7547" config-ref="Database_Config">
+            <db:sql><![CDATA[select * from `note-team` where id = :noteId]]></db:sql>
+            <db:input-parameters><![CDATA[#[{noteId:vars.noteId}]]]></db:input-parameters>
+        </db:select>
+        <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="post:\api\notes:application\json:craft-mulesoft-traninees-config">
+		<ee:transform doc:name="set create date" doc:id="facaaa43-3f50-499f-854d-c6887af9fc75" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+			<ee:message>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="createDate" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+ cDate: payload.createAt as DateTime as String {format: "yyyy-MM-dd HH:mm:ss"}
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<db:insert doc:name="Insert note" doc:id="1b2ec493-9cb5-4ad1-b3ce-abe58ed71008" config-ref="Database_Config">
+			<db:sql ><![CDATA[INSERT INTO `note-team` (titel, content,createAt) VALUES (:titel, :content, :createAt);
+]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{titel:payload.titel, content:payload.content, createAt:payload.createAt as DateTime as String {format: "yyyy-MM-dd HH:mm:ss"}}]]]></db:input-parameters>
+		</db:insert>
+		<ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  Message: "Successfully note added",
+  Code: 201
+  //INSERT INTO `note-team` (titel, content, createAt, updateAt) VALUES (:titel, :content, :createAt, :updateAt);
+ 
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="delete:\api\notes\(noteId):craft-mulesoft-traninees-config">
+        <set-variable value="#[attributes.uriParams.'noteId']" doc:name="Set noteId" doc:id="48b63e7e-be16-4ca9-9926-6b04e4cfc210" variableName="noteId" />
+        <db:delete doc:name="Delete" doc:id="2e2355af-f4f3-474a-852c-99c0d9040ca1" config-ref="Database_Config">
+			<db:sql ><![CDATA[DELETE FROM `note-team` WHERE (`id` = :noteId);]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{noteId:vars.noteId}]]]></db:input-parameters>
+		</db:delete>
+		<ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  Message: "Successfully note delete",
+  Code: 200
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+</mule>
