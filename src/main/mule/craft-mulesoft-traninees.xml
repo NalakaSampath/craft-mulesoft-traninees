@@ -94,12 +94,14 @@ output application/json
         </error-handler>
     </flow>
     <flow name="put:\api\notes\(noteId):application\json:craft-mulesoft-traninees-config">
-        <set-variable value="#[attributes.uriParams.'noteId']" doc:name="Set noteId" doc:id="fc9b5308-81a7-4052-81a9-a8c01f472ea5" variableName="noteId" />
+        <logger level="INFO" doc:name="Begin Logger" doc:id="704c6e00-df96-4613-943f-31d6f35b4255" message="#['Start ']#[flow.name]" />
+		<set-variable value="#[attributes.uriParams.'noteId']" doc:name="Set noteId" doc:id="fc9b5308-81a7-4052-81a9-a8c01f472ea5" variableName="noteId" />
+		<logger level="INFO" doc:name="NoteId Logger" doc:id="34ee2188-14cd-4acc-a586-b803ffa9edfb" message="#['NoteId :']#[vars.noteId]" />
 		<db:update doc:name="Update" doc:id="088354bb-8cbe-492a-bf9c-906f1b2dc24d" config-ref="Database_Config">
 			<db:sql ><![CDATA[UPDATE `note-team` SET titel = :titel, content = :content , updateAt = :updateAt WHERE id = :noteId;]]></db:sql>
 			<db:input-parameters ><![CDATA[#[{noteId:vars.noteId,titel:payload.titel, content:payload.content, updateAt:now() as DateTime as String {format: "yyyy-MM-dd HH:mm:ss"}}]]]></db:input-parameters>
 		</db:update>
-		<ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+		<ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:name="Set Message">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -110,6 +112,7 @@ output application/json
 }]]></ee:set-payload>
             </ee:message>
         </ee:transform>
+		<logger level="INFO" doc:name="End Logger" doc:id="a9edfdd7-34c8-4966-8d5e-a9828df91dd0" message="#['End ']#[flow.name]" />
     </flow>
     <flow name="get:\api\notes:craft-mulesoft-traninees-config">
         <!-- <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
@@ -135,7 +138,8 @@ output application/json
 ]]]></ee:set-payload>
             </ee:message>
         </ee:transform> -->
-        <db:select doc:id="64a72226-1263-4767-925c-0637a06ead0e" config-ref="Database_Config" doc:name="Select all notes">
+        <logger level="INFO" doc:name="Begin Logger" doc:id="797f5343-ab15-4f52-ad94-4f400e147073" message="#['Start ']#[flow.name]" />
+		<db:select doc:id="64a72226-1263-4767-925c-0637a06ead0e" config-ref="Database_Config" doc:name="Select all notes">
             <db:sql><![CDATA[select * from `note-team`]]></db:sql>
         </db:select>
         <ee:transform doc:name="convert to json" doc:id="7c9e0035-9a04-4d4b-a744-4de44b1f3e4d">
@@ -146,19 +150,22 @@ output application/json
 payload]]></ee:set-payload>
             </ee:message>
         </ee:transform>
+		<logger level="INFO" doc:name="End Logger" doc:id="fde00748-737a-4643-9dba-1e20377cc09a" message="#['End ']#[flow.name]" />
     </flow>
     <flow name="get:\api\notes\(noteId):craft-mulesoft-traninees-config">
-        <set-variable value="#[attributes.uriParams.'noteId']" doc:name="Set noteId" doc:id="d3d6cf5b-3ecf-4571-b733-66e170ef1816" variableName="noteId" />
+        <logger level="INFO" doc:name="Begin Logger" doc:id="e65ad79d-7534-4690-91ee-e8acef4a4ec2" message="#['Start ']#[flow.name]" />
+		<set-variable value="#[attributes.uriParams.'noteId']" doc:name="Set noteId" doc:id="d3d6cf5b-3ecf-4571-b733-66e170ef1816" variableName="noteId" />
         <!-- 		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core">
             <ee:variables>
                 <ee:set-variable variableName="noteId">attributes.uriParams.'noteId'</ee:set-variable>
             </ee:variables>
         </ee:transform> -->
-        <db:select doc:name="Select specific note" doc:id="034484dd-d335-4f3f-98f0-6b2a038b7547" config-ref="Database_Config">
+        <logger level="INFO" doc:name="NoteId Logger" doc:id="78ee9992-bcbb-4bba-a21e-c21794d88ef8" message="#['NoteId :']#[vars.noteId]" />
+		<db:select doc:name="Select specific note" doc:id="034484dd-d335-4f3f-98f0-6b2a038b7547" config-ref="Database_Config">
             <db:sql><![CDATA[select * from `note-team` where id = :noteId]]></db:sql>
             <db:input-parameters><![CDATA[#[{noteId:vars.noteId}]]]></db:input-parameters>
         </db:select>
-        <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+        <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:name="convert to json">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -166,26 +173,16 @@ output application/json
 payload]]></ee:set-payload>
             </ee:message>
         </ee:transform>
+		<logger level="INFO" doc:name="End Logger" doc:id="d1c0942c-bcf5-419e-bebe-316edc684abe" message="#['End ']#[flow.name]" />
     </flow>
     <flow name="post:\api\notes:application\json:craft-mulesoft-traninees-config">
-		<ee:transform doc:name="set create date" doc:id="facaaa43-3f50-499f-854d-c6887af9fc75" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-			<ee:message>
-			</ee:message>
-			<ee:variables >
-				<ee:set-variable variableName="createDate" ><![CDATA[%dw 2.0
-output application/json
----
-{
- cDate: payload.createAt as DateTime as String {format: "yyyy-MM-dd HH:mm:ss"}
-}]]></ee:set-variable>
-			</ee:variables>
-		</ee:transform>
+		<logger level="INFO" doc:name="Begin Logger" doc:id="471b1a41-c0f6-4f2b-bb30-de9df68af2f6" message="#['Start ']#[flow.name]"/>
 		<db:insert doc:name="Insert note" doc:id="1b2ec493-9cb5-4ad1-b3ce-abe58ed71008" config-ref="Database_Config">
 			<db:sql ><![CDATA[INSERT INTO `note-team` (titel, content,createAt) VALUES (:titel, :content, :createAt);
 ]]></db:sql>
 			<db:input-parameters ><![CDATA[#[{titel:payload.titel, content:payload.content, createAt:payload.createAt as DateTime as String {format: "yyyy-MM-dd HH:mm:ss"}}]]]></db:input-parameters>
 		</db:insert>
-		<ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+		<ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:name="Set Message">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -193,19 +190,20 @@ output application/json
 {
   Message: "Successfully note added",
   Code: 201
-  //INSERT INTO `note-team` (titel, content, createAt, updateAt) VALUES (:titel, :content, :createAt, :updateAt);
- 
 }]]></ee:set-payload>
             </ee:message>
         </ee:transform>
+		<logger level="INFO" doc:name="End Logger" doc:id="5366477f-1620-4377-a3cb-f470e387fca8" message="#['End ']#[flow.name]" />
     </flow>
     <flow name="delete:\api\notes\(noteId):craft-mulesoft-traninees-config">
-        <set-variable value="#[attributes.uriParams.'noteId']" doc:name="Set noteId" doc:id="48b63e7e-be16-4ca9-9926-6b04e4cfc210" variableName="noteId" />
-        <db:delete doc:name="Delete" doc:id="2e2355af-f4f3-474a-852c-99c0d9040ca1" config-ref="Database_Config">
+        <logger level="INFO" doc:name="Begin Logger" doc:id="a316898b-7070-406c-89f3-87272e24bcc7" message="#['Start ']#[flow.name]" />
+		<set-variable value="#[attributes.uriParams.'noteId']" doc:name="Set noteId" doc:id="48b63e7e-be16-4ca9-9926-6b04e4cfc210" variableName="noteId" />
+        <logger level="INFO" doc:name="NoteId Logger" doc:id="701c7e46-04b7-4f5b-8876-856964057146" message="#['NoteId :']#[vars.noteId]" />
+		<db:delete doc:name="Delete" doc:id="2e2355af-f4f3-474a-852c-99c0d9040ca1" config-ref="Database_Config">
 			<db:sql ><![CDATA[DELETE FROM `note-team` WHERE (`id` = :noteId);]]></db:sql>
 			<db:input-parameters ><![CDATA[#[{noteId:vars.noteId}]]]></db:input-parameters>
 		</db:delete>
-		<ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+		<ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:name="Set Message">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -216,5 +214,6 @@ output application/json
 }]]></ee:set-payload>
             </ee:message>
         </ee:transform>
+		<logger level="INFO" doc:name="End Logger" doc:id="17b1a744-b3f6-4474-a200-d1328849d9a2" message="#['End ']#[flow.name]" />
     </flow>
 </mule>
