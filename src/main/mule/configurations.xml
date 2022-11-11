@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
 <http:listener-config name="craft-mulesoft-traninees-httpListenerConfig">
         <http:listener-connection host="${http.listener.host}" port="${http.listener.port}" />
     </http:listener-config>
     <apikit:config name="craft-mulesoft-traninees-config" api="craft-mulesoft-traninees.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     
 	<db:config name="Database_Config" doc:name="Database Config" doc:id="ba3abc30-e201-4e97-8adc-44440f2113fe" >
-		<db:my-sql-connection host="${db.datasource.host}" port="${db.datasource.port}" user="${db.datasource.username}" password="${db.datasource.password}" database="${db.datasource.database}">
+		<db:my-sql-connection host="${db.datasource.host}" port="${db.datasource.port}" user="${secure::db.datasource.username}" password="${secure::db.datasource.password}" database="${db.datasource.database}">
 			<reconnection >
 				<reconnect count="${db.reconnect.attempts}" frequency="${db.reconnect.frequency}"/>
 			</reconnection>
@@ -24,5 +25,8 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 		</db:my-sql-connection>
 	</db:config>
 	<configuration-properties doc:name="Configuration properties" doc:id="892689fb-d041-4f2f-ae2f-74d6edbb731d" file="${evn}.yaml" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="45abc047-7a94-47a6-baf2-53c6001d533e" file="${evn}.secure.yaml" key="craftmule" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
 	<global-property doc:name="Global Property" doc:id="5910e43f-9b80-49df-80ca-04867943006c" name="evn" value="local" />
 </mule>
