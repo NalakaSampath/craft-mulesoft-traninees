@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="craft-mulesoft-traninees-sucess.xml" />
+	<munit:test name="put:\api\notes\(noteId):application\json:craft-mulesoft-traninees-config-test" doc:id="725ce4c8-0ac2-4d10-8ebe-7886aedb5be0" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Update" doc:id="a2e164a7-d772-42e5-b0f2-e8061b194920" processor="db:update">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="088354bb-8cbe-492a-bf9c-906f1b2dc24d" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://putapinotesnoteIdapplicationjsoncraftmulesofttranineesconfigtest/mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://putapinotesnoteIdapplicationjsoncraftmulesofttranineesconfigtest/mock_variable_.dwl')]" />
+						<munit-tools:variable key="noteId" value="#[output application/java --- readUrl('classpath://putapinotesnoteIdapplicationjsoncraftmulesofttranineesconfigtest/mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="3f023e8b-aab6-4a5b-950f-c0b11e75d720" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://putapinotesnoteIdapplicationjsoncraftmulesofttranineesconfigtest/set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://putapinotesnoteIdapplicationjsoncraftmulesofttranineesconfigtest/set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://putapinotesnoteIdapplicationjsoncraftmulesofttranineesconfigtest/set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to put:\api\notes\(noteId):application\json:craft-mulesoft-traninees-config" doc:id="2f0a4cdd-4a70-4de4-ac5c-52ee1a2034a4" name="put:\api\notes\(noteId):application\json:craft-mulesoft-traninees-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="66e54dd9-38ef-4492-b23d-43ec19246a8d" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import putapinotesnoteIdapplicationjsoncraftmulesofttranineesconfigtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get:\api\notes\(noteId):craft-mulesoft-traninees-config-test" doc:id="9077a4d0-9b73-4197-bd14-0e0cadf5e0f0" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Select specific note" doc:id="8b4c6bea-1103-4d7a-b5fd-13a9046b88a2" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="034484dd-d335-4f3f-98f0-6b2a038b7547" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://getapinotesnoteIdcraftmulesofttranineesconfigtest/mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://getapinotesnoteIdcraftmulesofttranineesconfigtest/mock_variable_.dwl')]" />
+						<munit-tools:variable key="noteId" value="#[output application/java --- readUrl('classpath://getapinotesnoteIdcraftmulesofttranineesconfigtest/mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="aa52d8de-5286-4968-a2c7-c2b6f919c198" >
+				<munit:payload value="#[readUrl('classpath://getapinotesnoteIdcraftmulesofttranineesconfigtest/set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://getapinotesnoteIdcraftmulesofttranineesconfigtest/set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://getapinotesnoteIdcraftmulesofttranineesconfigtest/set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\api\notes\(noteId):craft-mulesoft-traninees-config" doc:id="5d63dbf7-d9f6-4b3d-b73a-97f9d77145e4" name="get:\api\notes\(noteId):craft-mulesoft-traninees-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="bb175442-adba-49ad-b088-e291a4debc0c" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import getapinotesnoteIdcraftmulesofttranineesconfigtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="post:\api\notes:application\json:craft-mulesoft-traninees-config-test" doc:id="2ddee227-8aad-4bb8-b67c-571a3b67b849" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Insert note" doc:id="162f2b5d-5ce8-457f-bc2e-1bc7ba048d8c" processor="db:insert">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="1b2ec493-9cb5-4ad1-b3ce-abe58ed71008" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://postapinotesapplicationjsoncraftmulesofttranineesconfigtest/mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://postapinotesapplicationjsoncraftmulesofttranineesconfigtest/mock_variable_.dwl')]" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="3bdebf0b-8ba7-42b9-8468-27affdf7a93c" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://postapinotesapplicationjsoncraftmulesofttranineesconfigtest/set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://postapinotesapplicationjsoncraftmulesofttranineesconfigtest/set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://postapinotesapplicationjsoncraftmulesofttranineesconfigtest/set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\api\notes:application\json:craft-mulesoft-traninees-config" doc:id="e5ddbd42-a8a7-45bf-b8ee-e5b6bf3002a1" name="post:\api\notes:application\json:craft-mulesoft-traninees-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="49a70ccb-a069-4a7e-bf00-f1263038ef01" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import postapinotesapplicationjsoncraftmulesofttranineesconfigtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="delete:\api\notes\(noteId):craft-mulesoft-traninees-config-test" doc:id="5873502c-da85-4283-b4d5-b3fba4e2c7b8" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Delete" doc:id="992c10bf-e480-4546-b41c-cf971b8b08ce" processor="db:delete">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="2e2355af-f4f3-474a-852c-99c0d9040ca1" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://deleteapinotesnoteIdcraftmulesofttranineesconfigtest/mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://deleteapinotesnoteIdcraftmulesofttranineesconfigtest/mock_variable_.dwl')]" />
+						<munit-tools:variable key="noteId" value="#[output application/java --- readUrl('classpath://deleteapinotesnoteIdcraftmulesofttranineesconfigtest/mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="e04d6534-7e6b-4527-9dab-3b748f61b9a2" >
+				<munit:payload value="#[readUrl('classpath://deleteapinotesnoteIdcraftmulesofttranineesconfigtest/set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://deleteapinotesnoteIdcraftmulesofttranineesconfigtest/set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://deleteapinotesnoteIdcraftmulesofttranineesconfigtest/set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to delete:\api\notes\(noteId):craft-mulesoft-traninees-config" doc:id="3b76940a-0835-466d-bda1-c72efe0828c0" name="delete:\api\notes\(noteId):craft-mulesoft-traninees-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="7c8bbe5b-5fdd-4564-afc1-9286cff1e858" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import deleteapinotesnoteIdcraftmulesofttranineesconfigtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get:\api\notes:craft-mulesoft-traninees-config-test" doc:id="287a9ad8-659e-41fe-9436-e8d06ddbe83f" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Select all notes" doc:id="10566d7d-ae6f-451a-a2c1-3738a2c40f04" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="64a72226-1263-4767-925c-0637a06ead0e" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://getapinotescraftmulesofttranineesconfigtest/mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://getapinotescraftmulesofttranineesconfigtest/mock_variable_.dwl')]" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="1351ef01-a1b3-424e-9459-09440c82afe3" >
+				<munit:payload value="#[readUrl('classpath://getapinotescraftmulesofttranineesconfigtest/set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://getapinotescraftmulesofttranineesconfigtest/set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://getapinotescraftmulesofttranineesconfigtest/set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\api\notes:craft-mulesoft-traninees-config" doc:id="1b1d4158-926b-4840-8bed-1f91c02c5c6f" name="get:\api\notes:craft-mulesoft-traninees-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="81f3bff1-a8fb-44d8-841f-921dcc59f3ba" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import getapinotescraftmulesofttranineesconfigtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+
+</mule>
